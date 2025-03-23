@@ -18,7 +18,9 @@ public class HelloWorld : MonoBehaviour
                 print('hello tolua#')     
                 
                 timerMgr = TimerManager()
-                
+
+                debugTickCount = 0
+
                 timerMgr:Start()
 
                 local timer1 = timerMgr:AddTimer(
@@ -40,8 +42,8 @@ public class HelloWorld : MonoBehaviour
                 function(p1,p2)
                     print('timer1 triggered!',p1,p2)
                 end,
-                1m,
-                11m
+                10,
+                110
                 )
 
                 local timer2 = timerMgr:AddTimer(
@@ -68,7 +70,7 @@ public class HelloWorld : MonoBehaviour
 
                 timerMgr:RemoveTimer(timer3)
 
-                for i=0,100000,1
+                for i=0,1000000,1 do
                 local timer4 = timerMgr:AddTimer(
                 3000,
                 500,
@@ -80,6 +82,8 @@ public class HelloWorld : MonoBehaviour
                 44
                 )
                 end
+
+                print('timer4 Added!',p1,p2,debugTickCount)
             ";
         
         lua.DoString(hello, "HelloWorld.cs");
@@ -92,7 +96,8 @@ public class HelloWorld : MonoBehaviour
     {
         string tick =
             @"   
-                --print('Tick#')              
+                debugTickCount = debugTickCount + 1         
+                print('Tick#',debugTickCount)    
                 timerMgr:Tick();     
             ";
         
