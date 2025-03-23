@@ -21,7 +21,9 @@ public class ScriptsFromFile : MonoBehaviour
         lua.Start();        
         //如果移动了ToLua目录，自己手动修复吧，只是例子就不做配置了
         string fullPath = Application.dataPath + "\\ToLua/Examples/02_ScriptsFromFile";
-        lua.AddSearchPath(fullPath);        
+        lua.AddSearchPath(fullPath);   
+
+        LuaBinder.Bind(lua);     
     }
 
     void Log(string msg, string stackTrace, LogType type)
