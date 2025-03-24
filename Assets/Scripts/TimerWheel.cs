@@ -13,6 +13,8 @@ public class TimerWheel
 	private int m_TimerIdCounter = 1;
 	private Dictionary<int, Timer> m_TimerMap = new Dictionary<int, Timer>();
 	
+	private List<Timer> m_SlotListWaitForAdd = new List<Timer>();
+	private List<int> m_SlotListWaitForRemove = new List<int>();
 	public TimerWheel(int tickMs, int slotCount)
 	{
 		m_TickMs = tickMs;
@@ -47,14 +49,27 @@ public class TimerWheel
 				}
 				if(timer.Repeat != 0)
 				{
-					RemoveTimer(timer.Id);
-					AddTimerInternal(timer.Delay, timer.Interval, timer.Repeat,timer.Callback, timer.Param1, timer.Param2, timer.Id);
+					m_SlotListWaitForRemove.Add(timer.Id);
+					m_SlotListWaitForAdd.Add(timer);
+					//RemoveTimer(timer.Id);
+					//AddTimerInternal(timer.Delay, timer.Interval, timer.Repeat,timer.Callback, timer.Param1, timer.Param2, timer.Id);
 				}
 			}
 			else
 			{
-				RemoveTimer(timer.Id);
+				m_SlotListWaitForRemove.Add(timer.Id);
+				//RemoveTimer(timer.Id);
 			}
+		}
+
+		foreach (var id in m_SlotListWaitForRemove)
+		{
+			RemoveTimer(id);
+		}
+
+		foreach (var timer in m_SlotListWaitForAdd)
+		{
+			AddTimerInternal(timer.Delay, timer.Interval, timer.Repeat,timer.Callback, timer.Param1, timer.Param2, timer.Id);
 		}
 	}
 

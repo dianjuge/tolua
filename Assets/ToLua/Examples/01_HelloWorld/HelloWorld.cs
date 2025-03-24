@@ -22,68 +22,54 @@ public class HelloWorld : MonoBehaviour
                 debugTickCount = 0
 
                 timerMgr:Start()
+                
+                
+                --计时器执行计数
+                timerExecuteCounter = 0
 
-                local timer1 = timerMgr:AddTimer(
-                1000,
-                500,
-                0,
-                function(p1,p2)
-                    print('timer1 triggered!',p1,p2)
-                end,
-                1,
-                11
-                )
-
-                timerMgr:ModifyTimer(
-                timer1,
-                5000,
-                500,
-                2,
-                function(p1,p2)
-                    print('timer1 triggered!',p1,p2)
-                end,
-                10,
-                110
-                )
-
-                local timer2 = timerMgr:AddTimer(
-                2000,
-                500,
-                0,
-                function(p1,p2)
-                    print('timer2 triggered!',p1,p2)
-                end,
-                2,
-                22
-                )
-
-                local timer3 = timerMgr:AddTimer(
+                --10万次计时器执行测试
+                local m_StartTime = os.clock()
+                for i=0,100000 do
+                timerMgr:AddTimer(
                 3000,
                 500,
                 0,
                 function(p1,p2)
-                    print('timer3 triggered!',p1,p2)
+                    timerExecuteCounter = timerExecuteCounter + 1
+                    if(timerExecuteCounter == 1) then
+                        m_StartTime10w = os.clock()
+                        print('10w timer execute triggered! start time:',m_StartTime10w)
+                    end
+                    if(i == 100000) then
+                        m_EndTime10w = os.clock()
+                        print('10w timer execute triggered! time:',m_EndTime10w-m_StartTime10w)
+                    end
+                    --print('timer4 triggered!',p1,p2)
                 end,
-                3,
-                33
-                )
-
-                timerMgr:RemoveTimer(timer3)
-
-                for i=0,1000000,1 do
-                local timer4 = timerMgr:AddTimer(
-                3000,
-                500,
-                0,
-                function(p1,p2)
-                    print('timer4 triggered!',p1,p2)
-                end,
-                4,
-                44
+                4,44
                 )
                 end
 
-                print('timer4 Added!',p1,p2,debugTickCount)
+                local m_EndTime = os.clock()
+
+                print('10w timer Added! time:',m_EndTime-m_StartTime,debugTickCount)
+
+                --100万次计时器添加测试
+                local m_StartTime = os.clock()
+                for i=0,100000 do
+                timerMgr:AddTimer(
+                3000,
+                500,
+                0,
+                function(p1,p2)
+                end,
+                4,44
+                )
+                end
+
+                local m_EndTime = os.clock()
+
+                print('100w timer Added! time:',m_EndTime-m_StartTime,debugTickCount)
             ";
         
         lua.DoString(hello, "HelloWorld.cs");
@@ -97,7 +83,7 @@ public class HelloWorld : MonoBehaviour
         string tick =
             @"   
                 debugTickCount = debugTickCount + 1         
-                print('Tick#',debugTickCount)    
+                --print('Tick#',debugTickCount)    
                 timerMgr:Tick();     
             ";
         
