@@ -14,6 +14,8 @@ public static class LuaBinder
 		TimerWrap.Register(L);
 		TimerWheelWrap.Register(L);
 		TimerManagerWrap.Register(L);
+		LuaTestWrap.Register(L);
+		SimpleTimerWrap.Register(L);
 		L.BeginModule("LuaInterface");
 		LuaInterface_LuaInjectionStationWrap.Register(L);
 		LuaInterface_InjectTypeWrap.Register(L);

@@ -1,59 +1,81 @@
 using System;
 using UnityEngine;
+using System.Timers;
 using System.Collections;
 using System.Collections.Generic;
 
-public class TimerManager
+public class TimerManager : MonoBehaviour
 {
-	private System.Timers.Timer m_Timer;
-	private TimerWheel m_TimerWheel;
-
 	public int debugTotalTickTimes = 0;
-    
-	public void Start()
-    {
-        m_TimerWheel = new TimerWheel(20, 10);
 
-		// m_Timer = new System.Timers.Timer(1);
-		// m_Timer.Elapsed += (sender, e) => Tick();
-		// m_Timer.Start();
+	private float m_debugTickTime = 0;
+    private int m_TimerIdCounter = 1;
+	private List<TimerWheel> m_TimerWheels;
+
+	public void Awake()
+    {
+		m_TimerWheels = new List<TimerWheel>();
 		
-		// var timer1 = AddTimer(1000,1000, 0, (a,b) => Debug.Log("TestTimer, param1 : {a}, param2 : {b}, total ticks : {0}"), 1, 11);
-		// var timer2 = AddTimer(3000,1000, 0, (a,b) => Debug.Log("TestTimer2, param1 : {a}, param2 : {b}, total ticks : {TimerManager.debugTotalTickTimes}"), 3, 33);
-		
-		// var timer3 = AddTimer(2100,1000, 0, (a,b) => {
-		// 	RemoveTimer(timer2);
-		// 	Debug.Log("TestTimer3, param1 : {a}, param2 : {b}, total ticks : {TimerManager.debugTotalTickTimes}");
-		// }, 2, 22);
-		// var timer4 = AddTimer(5000,1000, 0, (a,b) => Debug.Log("TestTimer2, param1 : {a}, param2 : {b}, total ticks : {TimerManager.debugTotalTickTimes}"), 3, 33);
-		
-		
+        m_TimerWheels.Add(new TimerWheel(100, 10, 0)); 			// 100毫秒
+        m_TimerWheels.Add(new TimerWheel(1000, 60, 1)); 		// 1秒
+		m_TimerWheels.Add(new TimerWheel(60000, 60, 2)); 		// 1分钟
+		m_TimerWheels.Add(new TimerWheel(3600000, 24, 3)); 		// 1小时
+
+		for (int i = 0; i < m_TimerWheels.Count - 1; i++)
+		{
+			m_TimerWheels[i].nextWheel = m_TimerWheels[i + 1];
+		}
+
+		for (int i = 1; i < m_TimerWheels.Count; i++)
+		{
+			m_TimerWheels[i].preWheel = m_TimerWheels[i - 1];
+		}
     }
+
+	public void Update()
+    {
+		m_debugTickTime += Time.deltaTime;
+			
+		debugTotalTickTimes += 1;
+		TickTimerWheel(0);
+    }
+
+	private void TickTimerWheel(int index)
+	{
+		if(index >= m_TimerWheels.Count)
+		{
+			return;
+		}
+
+		m_TimerWheels[index].Tick();
+		if(m_TimerWheels[index].CurrentSlot == 0)
+		{
+			TickTimerWheel(index + 1);
+		}
+	}
 
     public int AddTimer(long delay, long interval, int repeat, Action<object, object> callback, object param1, object param2)
 	{
-		return m_TimerWheel.AddTimer(delay, interval, repeat, callback, param1, param2);
+		m_TimerWheels[0].AddTimer(delay, interval, repeat, callback, param1, param2, m_TimerIdCounter++);
+		return m_TimerIdCounter;
 	}
 
 	public bool RemoveTimer(int id)
 	{
-		return m_TimerWheel.RemoveTimer(id);
+		var timer = TimerWheel.s_TimerMap[id];
+		var wheelIndex = timer.WheelIndex;
+		return m_TimerWheels[wheelIndex].RemoveTimer(id);
 	}
 
 	public bool ModifyTimer(int id, long delay, long interval, int repeat, Action<object, object> callback, object param1, object param2)
 	{
-		return m_TimerWheel.ModifyTimer(id, delay, interval, repeat, callback, param1, param2);
+		var timer = TimerWheel.s_TimerMap[id];
+		var wheelIndex = timer.WheelIndex;
+		return m_TimerWheels[wheelIndex].ModifyTimer(id, delay, interval, repeat, callback, param1, param2);
 	}
-
-	public void Tick()
-    {
-		debugTotalTickTimes+=1;
-		m_TimerWheel.Tick();
-    }
 
 	public void OnDestroy()
 	{
-		m_Timer.Stop();
-		m_Timer.Dispose();
+		m_TimerWheels.Clear();
 	}
 }

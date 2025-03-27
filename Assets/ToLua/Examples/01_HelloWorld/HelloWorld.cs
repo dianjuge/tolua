@@ -23,6 +23,7 @@ public class HelloWorld : MonoBehaviour
 
                 timerMgr:Start()
                 
+                --计时器添加
                 
                 --计时器执行计数
                 timerExecuteCounter = 0

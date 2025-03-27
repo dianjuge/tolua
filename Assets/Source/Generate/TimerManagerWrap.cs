@@ -6,36 +6,28 @@ public class TimerManagerWrap
 {
 	public static void Register(LuaState L)
 	{
-		L.BeginClass(typeof(TimerManager), typeof(System.Object));
-		L.RegFunction("Start", Start);
+		L.BeginClass(typeof(TimerManager), typeof(UnityEngine.MonoBehaviour));
+		L.RegFunction("Awake", Awake);
+		L.RegFunction("Update", Update);
 		L.RegFunction("AddTimer", AddTimer);
 		L.RegFunction("RemoveTimer", RemoveTimer);
 		L.RegFunction("ModifyTimer", ModifyTimer);
-		L.RegFunction("Tick", Tick);
 		L.RegFunction("OnDestroy", OnDestroy);
-		L.RegFunction("New", _CreateTimerManager);
+		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("debugTotalTickTimes", get_debugTotalTickTimes, set_debugTotalTickTimes);
 		L.EndClass();
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int _CreateTimerManager(IntPtr L)
+	static int Awake(IntPtr L)
 	{
 		try
 		{
-			int count = LuaDLL.lua_gettop(L);
-
-			if (count == 0)
-			{
-				TimerManager obj = new TimerManager();
-				ToLua.PushObject(L, obj);
-				return 1;
-			}
-			else
-			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to ctor method: TimerManager.New");
-			}
+			ToLua.CheckArgsCount(L, 1);
+			TimerManager obj = (TimerManager)ToLua.CheckObject<TimerManager>(L, 1);
+			obj.Awake();
+			return 0;
 		}
 		catch (Exception e)
 		{
@@ -44,13 +36,13 @@ public class TimerManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Start(IntPtr L)
+	static int Update(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
 			TimerManager obj = (TimerManager)ToLua.CheckObject<TimerManager>(L, 1);
-			obj.Start();
+			obj.Update();
 			return 0;
 		}
 		catch (Exception e)
@@ -125,13 +117,13 @@ public class TimerManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Tick(IntPtr L)
+	static int OnDestroy(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
 			TimerManager obj = (TimerManager)ToLua.CheckObject<TimerManager>(L, 1);
-			obj.Tick();
+			obj.OnDestroy();
 			return 0;
 		}
 		catch (Exception e)
@@ -141,14 +133,16 @@ public class TimerManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int OnDestroy(IntPtr L)
+	static int op_Equality(IntPtr L)
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 1);
-			TimerManager obj = (TimerManager)ToLua.CheckObject<TimerManager>(L, 1);
-			obj.OnDestroy();
-			return 0;
+			ToLua.CheckArgsCount(L, 2);
+			UnityEngine.Object arg0 = (UnityEngine.Object)ToLua.ToObject(L, 1);
+			UnityEngine.Object arg1 = (UnityEngine.Object)ToLua.ToObject(L, 2);
+			bool o = arg0 == arg1;
+			LuaDLL.lua_pushboolean(L, o);
+			return 1;
 		}
 		catch (Exception e)
 		{

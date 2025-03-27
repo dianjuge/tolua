@@ -16,8 +16,9 @@ public class TimerWrap
 		L.RegVar("Param1", get_Param1, set_Param1);
 		L.RegVar("Param2", get_Param2, set_Param2);
 		L.RegVar("Callback", get_Callback, set_Callback);
-		L.RegVar("RemainingRounds", get_RemainingRounds, set_RemainingRounds);
 		L.RegVar("SlotIndex", get_SlotIndex, null);
+		L.RegVar("WheelIndex", get_WheelIndex, null);
+		L.RegVar("ListNode", get_ListNode, set_ListNode);
 		L.EndClass();
 	}
 
@@ -179,25 +180,6 @@ public class TimerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_RemainingRounds(IntPtr L)
-	{
-		object o = null;
-
-		try
-		{
-			o = ToLua.ToObject(L, 1);
-			Timer obj = (Timer)o;
-			int ret = obj.RemainingRounds;
-			LuaDLL.lua_pushinteger(L, ret);
-			return 1;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e, o, "attempt to index RemainingRounds on a nil value");
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_SlotIndex(IntPtr L)
 	{
 		object o = null;
@@ -213,6 +195,44 @@ public class TimerWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o, "attempt to index SlotIndex on a nil value");
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_WheelIndex(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			Timer obj = (Timer)o;
+			int ret = obj.WheelIndex;
+			LuaDLL.lua_pushinteger(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index WheelIndex on a nil value");
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_ListNode(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			Timer obj = (Timer)o;
+			System.Collections.Generic.LinkedListNode<Timer> ret = obj.ListNode;
+			ToLua.PushSealed(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index ListNode on a nil value");
 		}
 	}
 
@@ -350,7 +370,7 @@ public class TimerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int set_RemainingRounds(IntPtr L)
+	static int set_ListNode(IntPtr L)
 	{
 		object o = null;
 
@@ -358,13 +378,13 @@ public class TimerWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			Timer obj = (Timer)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-			obj.RemainingRounds = arg0;
+			System.Collections.Generic.LinkedListNode<Timer> arg0 = (System.Collections.Generic.LinkedListNode<Timer>)ToLua.CheckObject(L, 2, typeof(System.Collections.Generic.LinkedListNode<Timer>));
+			obj.ListNode = arg0;
 			return 0;
 		}
 		catch(Exception e)
 		{
-			return LuaDLL.toluaL_exception(L, e, o, "attempt to index RemainingRounds on a nil value");
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index ListNode on a nil value");
 		}
 	}
 }

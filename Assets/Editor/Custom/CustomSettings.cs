@@ -154,6 +154,8 @@ public static class CustomSettings
         _GT(typeof(Timer)),
         _GT(typeof(TimerWheel)),
         _GT(typeof(TimerManager)),
+        _GT(typeof(LuaTest)),
+        _GT(typeof(SimpleTimer)),
     };
 
     public static List<Type> dynamicList = new List<Type>()

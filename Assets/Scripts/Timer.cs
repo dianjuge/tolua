@@ -13,6 +13,7 @@ public class Timer
 	public object Param2 { get; set; }
 	public Action<object, object> Callback { get; set; }
 	
-	public int RemainingRounds { get; set; }
     public int SlotIndex { get; internal set; }
+	public int WheelIndex { get; internal set; }
+	public LinkedListNode<Timer> ListNode { get; set; }
 }

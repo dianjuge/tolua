@@ -2,59 +2,30 @@
 using System;
 using LuaInterface;
 
-public class TimerWheelWrap
+public class SimpleTimerWrap
 {
 	public static void Register(LuaState L)
 	{
-		L.BeginClass(typeof(TimerWheel), typeof(System.Object));
-		L.RegFunction("Tick", Tick);
+		L.BeginClass(typeof(SimpleTimer), typeof(UnityEngine.MonoBehaviour));
+		L.RegFunction("Update", Update);
 		L.RegFunction("AddTimer", AddTimer);
 		L.RegFunction("RemoveTimer", RemoveTimer);
 		L.RegFunction("ModifyTimer", ModifyTimer);
-		L.RegFunction("New", _CreateTimerWheel);
+		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("preWheel", get_preWheel, set_preWheel);
-		L.RegVar("nextWheel", get_nextWheel, set_nextWheel);
+		L.RegVar("debugTotalTickTimes", get_debugTotalTickTimes, set_debugTotalTickTimes);
 		L.RegVar("s_TimerMap", get_s_TimerMap, set_s_TimerMap);
-		L.RegVar("CurrentSlot", get_CurrentSlot, null);
 		L.EndClass();
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int _CreateTimerWheel(IntPtr L)
-	{
-		try
-		{
-			int count = LuaDLL.lua_gettop(L);
-
-			if (count == 3)
-			{
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 1);
-				int arg1 = (int)LuaDLL.luaL_checknumber(L, 2);
-				int arg2 = (int)LuaDLL.luaL_checknumber(L, 3);
-				TimerWheel obj = new TimerWheel(arg0, arg1, arg2);
-				ToLua.PushObject(L, obj);
-				return 1;
-			}
-			else
-			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to ctor method: TimerWheel.New");
-			}
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Tick(IntPtr L)
+	static int Update(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
-			TimerWheel obj = (TimerWheel)ToLua.CheckObject<TimerWheel>(L, 1);
-			obj.Tick();
+			SimpleTimer obj = (SimpleTimer)ToLua.CheckObject<SimpleTimer>(L, 1);
+			obj.Update();
 			return 0;
 		}
 		catch (Exception e)
@@ -69,7 +40,7 @@ public class TimerWheelWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 8);
-			TimerWheel obj = (TimerWheel)ToLua.CheckObject<TimerWheel>(L, 1);
+			SimpleTimer obj = (SimpleTimer)ToLua.CheckObject<SimpleTimer>(L, 1);
 			long arg0 = LuaDLL.tolua_checkint64(L, 2);
 			long arg1 = LuaDLL.tolua_checkint64(L, 3);
 			int arg2 = (int)LuaDLL.luaL_checknumber(L, 4);
@@ -77,8 +48,9 @@ public class TimerWheelWrap
 			object arg4 = ToLua.ToVarObject(L, 6);
 			object arg5 = ToLua.ToVarObject(L, 7);
 			int arg6 = (int)LuaDLL.luaL_checknumber(L, 8);
-			obj.AddTimer(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
-			return 0;
+			int o = obj.AddTimer(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+			LuaDLL.lua_pushinteger(L, o);
+			return 1;
 		}
 		catch (Exception e)
 		{
@@ -92,7 +64,7 @@ public class TimerWheelWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			TimerWheel obj = (TimerWheel)ToLua.CheckObject<TimerWheel>(L, 1);
+			SimpleTimer obj = (SimpleTimer)ToLua.CheckObject<SimpleTimer>(L, 1);
 			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
 			bool o = obj.RemoveTimer(arg0);
 			LuaDLL.lua_pushboolean(L, o);
@@ -110,7 +82,7 @@ public class TimerWheelWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 8);
-			TimerWheel obj = (TimerWheel)ToLua.CheckObject<TimerWheel>(L, 1);
+			SimpleTimer obj = (SimpleTimer)ToLua.CheckObject<SimpleTimer>(L, 1);
 			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
 			long arg1 = LuaDLL.tolua_checkint64(L, 3);
 			long arg2 = LuaDLL.tolua_checkint64(L, 4);
@@ -129,49 +101,15 @@ public class TimerWheelWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_preWheel(IntPtr L)
-	{
-		object o = null;
-
-		try
-		{
-			o = ToLua.ToObject(L, 1);
-			TimerWheel obj = (TimerWheel)o;
-			TimerWheel ret = obj.preWheel;
-			ToLua.PushObject(L, ret);
-			return 1;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e, o, "attempt to index preWheel on a nil value");
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_nextWheel(IntPtr L)
-	{
-		object o = null;
-
-		try
-		{
-			o = ToLua.ToObject(L, 1);
-			TimerWheel obj = (TimerWheel)o;
-			TimerWheel ret = obj.nextWheel;
-			ToLua.PushObject(L, ret);
-			return 1;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e, o, "attempt to index nextWheel on a nil value");
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_s_TimerMap(IntPtr L)
+	static int op_Equality(IntPtr L)
 	{
 		try
 		{
-			ToLua.PushSealed(L, TimerWheel.s_TimerMap);
+			ToLua.CheckArgsCount(L, 2);
+			UnityEngine.Object arg0 = (UnityEngine.Object)ToLua.ToObject(L, 1);
+			UnityEngine.Object arg1 = (UnityEngine.Object)ToLua.ToObject(L, 2);
+			bool o = arg0 == arg1;
+			LuaDLL.lua_pushboolean(L, o);
 			return 1;
 		}
 		catch (Exception e)
@@ -181,59 +119,54 @@ public class TimerWheelWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_CurrentSlot(IntPtr L)
+	static int get_debugTotalTickTimes(IntPtr L)
 	{
 		object o = null;
 
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			TimerWheel obj = (TimerWheel)o;
-			int ret = obj.CurrentSlot;
+			SimpleTimer obj = (SimpleTimer)o;
+			int ret = obj.debugTotalTickTimes;
 			LuaDLL.lua_pushinteger(L, ret);
 			return 1;
 		}
 		catch(Exception e)
 		{
-			return LuaDLL.toluaL_exception(L, e, o, "attempt to index CurrentSlot on a nil value");
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index debugTotalTickTimes on a nil value");
 		}
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int set_preWheel(IntPtr L)
+	static int get_s_TimerMap(IntPtr L)
+	{
+		try
+		{
+			ToLua.PushSealed(L, SimpleTimer.s_TimerMap);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_debugTotalTickTimes(IntPtr L)
 	{
 		object o = null;
 
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			TimerWheel obj = (TimerWheel)o;
-			TimerWheel arg0 = (TimerWheel)ToLua.CheckObject<TimerWheel>(L, 2);
-			obj.preWheel = arg0;
+			SimpleTimer obj = (SimpleTimer)o;
+			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			obj.debugTotalTickTimes = arg0;
 			return 0;
 		}
 		catch(Exception e)
 		{
-			return LuaDLL.toluaL_exception(L, e, o, "attempt to index preWheel on a nil value");
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int set_nextWheel(IntPtr L)
-	{
-		object o = null;
-
-		try
-		{
-			o = ToLua.ToObject(L, 1);
-			TimerWheel obj = (TimerWheel)o;
-			TimerWheel arg0 = (TimerWheel)ToLua.CheckObject<TimerWheel>(L, 2);
-			obj.nextWheel = arg0;
-			return 0;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e, o, "attempt to index nextWheel on a nil value");
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index debugTotalTickTimes on a nil value");
 		}
 	}
 
@@ -243,7 +176,7 @@ public class TimerWheelWrap
 		try
 		{
 			System.Collections.Generic.Dictionary<int,Timer> arg0 = (System.Collections.Generic.Dictionary<int,Timer>)ToLua.CheckObject(L, 2, typeof(System.Collections.Generic.Dictionary<int,Timer>));
-			TimerWheel.s_TimerMap = arg0;
+			SimpleTimer.s_TimerMap = arg0;
 			return 0;
 		}
 		catch (Exception e)
