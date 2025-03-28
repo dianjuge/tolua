@@ -13,9 +13,9 @@ public class TimerWheelWrap
 		L.RegFunction("ModifyTimer", ModifyTimer);
 		L.RegFunction("New", _CreateTimerWheel);
 		L.RegFunction("__tostring", ToLua.op_ToString);
+		L.RegVar("s_TimerMap", get_s_TimerMap, set_s_TimerMap);
 		L.RegVar("preWheel", get_preWheel, set_preWheel);
 		L.RegVar("nextWheel", get_nextWheel, set_nextWheel);
-		L.RegVar("s_TimerMap", get_s_TimerMap, set_s_TimerMap);
 		L.RegVar("CurrentSlot", get_CurrentSlot, null);
 		L.EndClass();
 	}
@@ -68,7 +68,7 @@ public class TimerWheelWrap
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 8);
+			ToLua.CheckArgsCount(L, 7);
 			TimerWheel obj = (TimerWheel)ToLua.CheckObject<TimerWheel>(L, 1);
 			long arg0 = LuaDLL.tolua_checkint64(L, 2);
 			long arg1 = LuaDLL.tolua_checkint64(L, 3);
@@ -76,9 +76,9 @@ public class TimerWheelWrap
 			System.Action<object,object> arg3 = (System.Action<object,object>)ToLua.CheckDelegate<System.Action<object,object>>(L, 5);
 			object arg4 = ToLua.ToVarObject(L, 6);
 			object arg5 = ToLua.ToVarObject(L, 7);
-			int arg6 = (int)LuaDLL.luaL_checknumber(L, 8);
-			obj.AddTimer(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
-			return 0;
+			int o = obj.AddTimer(arg0, arg1, arg2, arg3, arg4, arg5);
+			LuaDLL.lua_pushinteger(L, o);
+			return 1;
 		}
 		catch (Exception e)
 		{
@@ -129,6 +129,20 @@ public class TimerWheelWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_s_TimerMap(IntPtr L)
+	{
+		try
+		{
+			ToLua.PushSealed(L, TimerWheel.s_TimerMap);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_preWheel(IntPtr L)
 	{
 		object o = null;
@@ -167,20 +181,6 @@ public class TimerWheelWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_s_TimerMap(IntPtr L)
-	{
-		try
-		{
-			ToLua.PushSealed(L, TimerWheel.s_TimerMap);
-			return 1;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_CurrentSlot(IntPtr L)
 	{
 		object o = null;
@@ -196,6 +196,21 @@ public class TimerWheelWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o, "attempt to index CurrentSlot on a nil value");
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_s_TimerMap(IntPtr L)
+	{
+		try
+		{
+			System.Collections.Generic.Dictionary<int,Timer> arg0 = (System.Collections.Generic.Dictionary<int,Timer>)ToLua.CheckObject(L, 2, typeof(System.Collections.Generic.Dictionary<int,Timer>));
+			TimerWheel.s_TimerMap = arg0;
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
 		}
 	}
 
@@ -234,21 +249,6 @@ public class TimerWheelWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o, "attempt to index nextWheel on a nil value");
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int set_s_TimerMap(IntPtr L)
-	{
-		try
-		{
-			System.Collections.Generic.Dictionary<int,Timer> arg0 = (System.Collections.Generic.Dictionary<int,Timer>)ToLua.CheckObject(L, 2, typeof(System.Collections.Generic.Dictionary<int,Timer>));
-			TimerWheel.s_TimerMap = arg0;
-			return 0;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
 		}
 	}
 }

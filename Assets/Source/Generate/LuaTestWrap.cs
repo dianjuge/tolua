@@ -8,11 +8,12 @@ public class LuaTestWrap
 	{
 		L.BeginClass(typeof(LuaTest), typeof(UnityEngine.MonoBehaviour));
 		L.RegFunction("Start", Start);
+		L.RegFunction("DoLuaFile", DoLuaFile);
 		L.RegFunction("OnDestroy", OnDestroy);
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("timerType", get_timerType, set_timerType);
 		L.RegVar("s_LuaState", get_s_LuaState, set_s_LuaState);
+		L.RegVar("timerType", get_timerType, set_timerType);
 		L.EndClass();
 	}
 
@@ -24,6 +25,23 @@ public class LuaTestWrap
 			ToLua.CheckArgsCount(L, 1);
 			LuaTest obj = (LuaTest)ToLua.CheckObject<LuaTest>(L, 1);
 			obj.Start();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int DoLuaFile(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			LuaTest obj = (LuaTest)ToLua.CheckObject<LuaTest>(L, 1);
+			TIMER_TEST_TYPE arg0 = (TIMER_TEST_TYPE)ToLua.CheckObject(L, 2, typeof(TIMER_TEST_TYPE));
+			obj.DoLuaFile(arg0);
 			return 0;
 		}
 		catch (Exception e)
@@ -67,25 +85,6 @@ public class LuaTestWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_timerType(IntPtr L)
-	{
-		object o = null;
-
-		try
-		{
-			o = ToLua.ToObject(L, 1);
-			LuaTest obj = (LuaTest)o;
-			TIMER_TYPE ret = obj.timerType;
-			ToLua.Push(L, ret);
-			return 1;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e, o, "attempt to index timerType on a nil value");
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_s_LuaState(IntPtr L)
 	{
 		try
@@ -100,7 +99,7 @@ public class LuaTestWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int set_timerType(IntPtr L)
+	static int get_timerType(IntPtr L)
 	{
 		object o = null;
 
@@ -108,9 +107,9 @@ public class LuaTestWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			LuaTest obj = (LuaTest)o;
-			TIMER_TYPE arg0 = (TIMER_TYPE)ToLua.CheckObject(L, 2, typeof(TIMER_TYPE));
-			obj.timerType = arg0;
-			return 0;
+			TIMER_TEST_TYPE ret = obj.timerType;
+			ToLua.Push(L, ret);
+			return 1;
 		}
 		catch(Exception e)
 		{
@@ -130,6 +129,25 @@ public class LuaTestWrap
 		catch (Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_timerType(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			LuaTest obj = (LuaTest)o;
+			TIMER_TEST_TYPE arg0 = (TIMER_TEST_TYPE)ToLua.CheckObject(L, 2, typeof(TIMER_TEST_TYPE));
+			obj.timerType = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index timerType on a nil value");
 		}
 	}
 }

@@ -11,14 +11,15 @@ public class TimerWrap
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("Id", get_Id, set_Id);
 		L.RegVar("Delay", get_Delay, set_Delay);
-		L.RegVar("Interval", get_Interval, set_Interval);
 		L.RegVar("Repeat", get_Repeat, set_Repeat);
+		L.RegVar("Interval", get_Interval, set_Interval);
 		L.RegVar("Param1", get_Param1, set_Param1);
 		L.RegVar("Param2", get_Param2, set_Param2);
-		L.RegVar("Callback", get_Callback, set_Callback);
+		L.RegVar("IsDisposed", get_IsDisposed, set_IsDisposed);
 		L.RegVar("SlotIndex", get_SlotIndex, null);
 		L.RegVar("WheelIndex", get_WheelIndex, null);
 		L.RegVar("ListNode", get_ListNode, set_ListNode);
+		L.RegVar("Callback", get_Callback, set_Callback);
 		L.EndClass();
 	}
 
@@ -85,25 +86,6 @@ public class TimerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_Interval(IntPtr L)
-	{
-		object o = null;
-
-		try
-		{
-			o = ToLua.ToObject(L, 1);
-			Timer obj = (Timer)o;
-			long ret = obj.Interval;
-			LuaDLL.tolua_pushint64(L, ret);
-			return 1;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e, o, "attempt to index Interval on a nil value");
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_Repeat(IntPtr L)
 	{
 		object o = null;
@@ -119,6 +101,25 @@ public class TimerWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o, "attempt to index Repeat on a nil value");
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_Interval(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			Timer obj = (Timer)o;
+			long ret = obj.Interval;
+			LuaDLL.tolua_pushint64(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index Interval on a nil value");
 		}
 	}
 
@@ -161,7 +162,7 @@ public class TimerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_Callback(IntPtr L)
+	static int get_IsDisposed(IntPtr L)
 	{
 		object o = null;
 
@@ -169,13 +170,13 @@ public class TimerWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			Timer obj = (Timer)o;
-			System.Action<object,object> ret = obj.Callback;
-			ToLua.Push(L, ret);
+			bool ret = obj.IsDisposed;
+			LuaDLL.lua_pushboolean(L, ret);
 			return 1;
 		}
 		catch(Exception e)
 		{
-			return LuaDLL.toluaL_exception(L, e, o, "attempt to index Callback on a nil value");
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index IsDisposed on a nil value");
 		}
 	}
 
@@ -237,6 +238,25 @@ public class TimerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_Callback(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			Timer obj = (Timer)o;
+			System.Action<object,object> ret = obj.Callback;
+			ToLua.Push(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index Callback on a nil value");
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_Id(IntPtr L)
 	{
 		object o = null;
@@ -275,25 +295,6 @@ public class TimerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int set_Interval(IntPtr L)
-	{
-		object o = null;
-
-		try
-		{
-			o = ToLua.ToObject(L, 1);
-			Timer obj = (Timer)o;
-			long arg0 = LuaDLL.tolua_checkint64(L, 2);
-			obj.Interval = arg0;
-			return 0;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e, o, "attempt to index Interval on a nil value");
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_Repeat(IntPtr L)
 	{
 		object o = null;
@@ -309,6 +310,25 @@ public class TimerWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o, "attempt to index Repeat on a nil value");
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_Interval(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			Timer obj = (Timer)o;
+			long arg0 = LuaDLL.tolua_checkint64(L, 2);
+			obj.Interval = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index Interval on a nil value");
 		}
 	}
 
@@ -351,7 +371,7 @@ public class TimerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int set_Callback(IntPtr L)
+	static int set_IsDisposed(IntPtr L)
 	{
 		object o = null;
 
@@ -359,13 +379,13 @@ public class TimerWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			Timer obj = (Timer)o;
-			System.Action<object,object> arg0 = (System.Action<object,object>)ToLua.CheckDelegate<System.Action<object,object>>(L, 2);
-			obj.Callback = arg0;
+			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
+			obj.IsDisposed = arg0;
 			return 0;
 		}
 		catch(Exception e)
 		{
-			return LuaDLL.toluaL_exception(L, e, o, "attempt to index Callback on a nil value");
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index IsDisposed on a nil value");
 		}
 	}
 
@@ -385,6 +405,25 @@ public class TimerWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o, "attempt to index ListNode on a nil value");
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_Callback(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			Timer obj = (Timer)o;
+			System.Action<object,object> arg0 = (System.Action<object,object>)ToLua.CheckDelegate<System.Action<object,object>>(L, 2);
+			obj.Callback = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index Callback on a nil value");
 		}
 	}
 }

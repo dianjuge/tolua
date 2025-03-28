@@ -6,29 +6,45 @@ using System.Collections.Generic;
 public class SimpleTimer : MonoBehaviour
 {
 	public int debugTotalTickTimes = 0;
+
+	private float m_debugTickTime = 0;
 	private List<Timer> m_Timers = new List<Timer>();
-	private List<int> m_SlotListWaitForRemove = new List<int>();
 	public static Dictionary<int, Timer> s_TimerMap = new Dictionary<int, Timer>();
 
 	public void Update()
 	{
+		m_debugTickTime += Time.deltaTime;
+
+		while(m_debugTickTime > 0.1f)
+		{
+			m_debugTickTime -= 0.1f;
+			debugTotalTickTimes += 1;
+			Tick();
+		}
+	}
+
+	public void Tick()
+	{
 		debugTotalTickTimes += 1;
-		m_SlotListWaitForRemove.Clear();
 		foreach (var timer in m_Timers)
 		{
-			//timer.Delay = (long)((float)timer.Delay - Time.deltaTime * 1000);
-
-			//if(timer.Delay <= 0)
+			if(timer.IsDisposed)
 			{
-				timer.Callback.Invoke(timer.Param1, timer.Param2);
-				//m_SlotListWaitForRemove.Add(timer.Id);
+				continue;
+			}
+
+			timer.Delay -= 100;
+
+			if(timer.Delay <= 0)
+			{
+				if(timer.Callback != null)
+				{
+					timer.Callback.Invoke(timer.Param1, timer.Param2);
+				}
+
+				timer.IsDisposed = true;
 			}
 		}
-
-		// foreach (var id in m_SlotListWaitForRemove)
-		// {
-		// 	RemoveTimer(id);
-		// }
 	}
 
 	public int AddTimer(long delay, long interval, int repeat, Action<object, object> callback, object param1, object param2, int id)
@@ -41,7 +57,8 @@ public class SimpleTimer : MonoBehaviour
 			Repeat = repeat,
 			Param1 = param1,
 			Param2 = param2,
-			Callback = callback
+			Callback = callback,
+			IsDisposed = false,
 		});
 		s_TimerMap[id] = m_Timers[m_Timers.Count - 1];
 		return id;

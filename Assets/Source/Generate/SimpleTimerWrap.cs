@@ -8,6 +8,7 @@ public class SimpleTimerWrap
 	{
 		L.BeginClass(typeof(SimpleTimer), typeof(UnityEngine.MonoBehaviour));
 		L.RegFunction("Update", Update);
+		L.RegFunction("Tick", Tick);
 		L.RegFunction("AddTimer", AddTimer);
 		L.RegFunction("RemoveTimer", RemoveTimer);
 		L.RegFunction("ModifyTimer", ModifyTimer);
@@ -26,6 +27,22 @@ public class SimpleTimerWrap
 			ToLua.CheckArgsCount(L, 1);
 			SimpleTimer obj = (SimpleTimer)ToLua.CheckObject<SimpleTimer>(L, 1);
 			obj.Update();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int Tick(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			SimpleTimer obj = (SimpleTimer)ToLua.CheckObject<SimpleTimer>(L, 1);
+			obj.Tick();
 			return 0;
 		}
 		catch (Exception e)

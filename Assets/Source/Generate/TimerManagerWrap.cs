@@ -15,6 +15,7 @@ public class TimerManagerWrap
 		L.RegFunction("OnDestroy", OnDestroy);
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
+		L.RegVar("s_Instance", get_s_Instance, set_s_Instance);
 		L.RegVar("debugTotalTickTimes", get_debugTotalTickTimes, set_debugTotalTickTimes);
 		L.EndClass();
 	}
@@ -56,17 +57,75 @@ public class TimerManagerWrap
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 7);
-			TimerManager obj = (TimerManager)ToLua.CheckObject<TimerManager>(L, 1);
-			long arg0 = LuaDLL.tolua_checkint64(L, 2);
-			long arg1 = LuaDLL.tolua_checkint64(L, 3);
-			int arg2 = (int)LuaDLL.luaL_checknumber(L, 4);
-			System.Action<object,object> arg3 = (System.Action<object,object>)ToLua.CheckDelegate<System.Action<object,object>>(L, 5);
-			object arg4 = ToLua.ToVarObject(L, 6);
-			object arg5 = ToLua.ToVarObject(L, 7);
-			int o = obj.AddTimer(arg0, arg1, arg2, arg3, arg4, arg5);
-			LuaDLL.lua_pushinteger(L, o);
-			return 1;
+			int count = LuaDLL.lua_gettop(L);
+
+			if (count == 2)
+			{
+				TimerManager obj = (TimerManager)ToLua.CheckObject<TimerManager>(L, 1);
+				long arg0 = LuaDLL.tolua_checkint64(L, 2);
+				int o = obj.AddTimer(arg0);
+				LuaDLL.lua_pushinteger(L, o);
+				return 1;
+			}
+			else if (count == 3)
+			{
+				TimerManager obj = (TimerManager)ToLua.CheckObject<TimerManager>(L, 1);
+				long arg0 = LuaDLL.tolua_checkint64(L, 2);
+				long arg1 = LuaDLL.tolua_checkint64(L, 3);
+				int o = obj.AddTimer(arg0, arg1);
+				LuaDLL.lua_pushinteger(L, o);
+				return 1;
+			}
+			else if (count == 4)
+			{
+				TimerManager obj = (TimerManager)ToLua.CheckObject<TimerManager>(L, 1);
+				long arg0 = LuaDLL.tolua_checkint64(L, 2);
+				long arg1 = LuaDLL.tolua_checkint64(L, 3);
+				int arg2 = (int)LuaDLL.luaL_checknumber(L, 4);
+				int o = obj.AddTimer(arg0, arg1, arg2);
+				LuaDLL.lua_pushinteger(L, o);
+				return 1;
+			}
+			else if (count == 5)
+			{
+				TimerManager obj = (TimerManager)ToLua.CheckObject<TimerManager>(L, 1);
+				long arg0 = LuaDLL.tolua_checkint64(L, 2);
+				long arg1 = LuaDLL.tolua_checkint64(L, 3);
+				int arg2 = (int)LuaDLL.luaL_checknumber(L, 4);
+				System.Action<object,object> arg3 = (System.Action<object,object>)ToLua.CheckDelegate<System.Action<object,object>>(L, 5);
+				int o = obj.AddTimer(arg0, arg1, arg2, arg3);
+				LuaDLL.lua_pushinteger(L, o);
+				return 1;
+			}
+			else if (count == 6)
+			{
+				TimerManager obj = (TimerManager)ToLua.CheckObject<TimerManager>(L, 1);
+				long arg0 = LuaDLL.tolua_checkint64(L, 2);
+				long arg1 = LuaDLL.tolua_checkint64(L, 3);
+				int arg2 = (int)LuaDLL.luaL_checknumber(L, 4);
+				System.Action<object,object> arg3 = (System.Action<object,object>)ToLua.CheckDelegate<System.Action<object,object>>(L, 5);
+				object arg4 = ToLua.ToVarObject(L, 6);
+				int o = obj.AddTimer(arg0, arg1, arg2, arg3, arg4);
+				LuaDLL.lua_pushinteger(L, o);
+				return 1;
+			}
+			else if (count == 7)
+			{
+				TimerManager obj = (TimerManager)ToLua.CheckObject<TimerManager>(L, 1);
+				long arg0 = LuaDLL.tolua_checkint64(L, 2);
+				long arg1 = LuaDLL.tolua_checkint64(L, 3);
+				int arg2 = (int)LuaDLL.luaL_checknumber(L, 4);
+				System.Action<object,object> arg3 = (System.Action<object,object>)ToLua.CheckDelegate<System.Action<object,object>>(L, 5);
+				object arg4 = ToLua.ToVarObject(L, 6);
+				object arg5 = ToLua.ToVarObject(L, 7);
+				int o = obj.AddTimer(arg0, arg1, arg2, arg3, arg4, arg5);
+				LuaDLL.lua_pushinteger(L, o);
+				return 1;
+			}
+			else
+			{
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: TimerManager.AddTimer");
+			}
 		}
 		catch (Exception e)
 		{
@@ -97,18 +156,89 @@ public class TimerManagerWrap
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 8);
-			TimerManager obj = (TimerManager)ToLua.CheckObject<TimerManager>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-			long arg1 = LuaDLL.tolua_checkint64(L, 3);
-			long arg2 = LuaDLL.tolua_checkint64(L, 4);
-			int arg3 = (int)LuaDLL.luaL_checknumber(L, 5);
-			System.Action<object,object> arg4 = (System.Action<object,object>)ToLua.CheckDelegate<System.Action<object,object>>(L, 6);
-			object arg5 = ToLua.ToVarObject(L, 7);
-			object arg6 = ToLua.ToVarObject(L, 8);
-			bool o = obj.ModifyTimer(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
-			LuaDLL.lua_pushboolean(L, o);
-			return 1;
+			int count = LuaDLL.lua_gettop(L);
+
+			if (count == 2)
+			{
+				TimerManager obj = (TimerManager)ToLua.CheckObject<TimerManager>(L, 1);
+				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				bool o = obj.ModifyTimer(arg0);
+				LuaDLL.lua_pushboolean(L, o);
+				return 1;
+			}
+			else if (count == 3)
+			{
+				TimerManager obj = (TimerManager)ToLua.CheckObject<TimerManager>(L, 1);
+				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				long arg1 = LuaDLL.tolua_checkint64(L, 3);
+				bool o = obj.ModifyTimer(arg0, arg1);
+				LuaDLL.lua_pushboolean(L, o);
+				return 1;
+			}
+			else if (count == 4)
+			{
+				TimerManager obj = (TimerManager)ToLua.CheckObject<TimerManager>(L, 1);
+				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				long arg1 = LuaDLL.tolua_checkint64(L, 3);
+				long arg2 = LuaDLL.tolua_checkint64(L, 4);
+				bool o = obj.ModifyTimer(arg0, arg1, arg2);
+				LuaDLL.lua_pushboolean(L, o);
+				return 1;
+			}
+			else if (count == 5)
+			{
+				TimerManager obj = (TimerManager)ToLua.CheckObject<TimerManager>(L, 1);
+				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				long arg1 = LuaDLL.tolua_checkint64(L, 3);
+				long arg2 = LuaDLL.tolua_checkint64(L, 4);
+				int arg3 = (int)LuaDLL.luaL_checknumber(L, 5);
+				bool o = obj.ModifyTimer(arg0, arg1, arg2, arg3);
+				LuaDLL.lua_pushboolean(L, o);
+				return 1;
+			}
+			else if (count == 6)
+			{
+				TimerManager obj = (TimerManager)ToLua.CheckObject<TimerManager>(L, 1);
+				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				long arg1 = LuaDLL.tolua_checkint64(L, 3);
+				long arg2 = LuaDLL.tolua_checkint64(L, 4);
+				int arg3 = (int)LuaDLL.luaL_checknumber(L, 5);
+				System.Action<object,object> arg4 = (System.Action<object,object>)ToLua.CheckDelegate<System.Action<object,object>>(L, 6);
+				bool o = obj.ModifyTimer(arg0, arg1, arg2, arg3, arg4);
+				LuaDLL.lua_pushboolean(L, o);
+				return 1;
+			}
+			else if (count == 7)
+			{
+				TimerManager obj = (TimerManager)ToLua.CheckObject<TimerManager>(L, 1);
+				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				long arg1 = LuaDLL.tolua_checkint64(L, 3);
+				long arg2 = LuaDLL.tolua_checkint64(L, 4);
+				int arg3 = (int)LuaDLL.luaL_checknumber(L, 5);
+				System.Action<object,object> arg4 = (System.Action<object,object>)ToLua.CheckDelegate<System.Action<object,object>>(L, 6);
+				object arg5 = ToLua.ToVarObject(L, 7);
+				bool o = obj.ModifyTimer(arg0, arg1, arg2, arg3, arg4, arg5);
+				LuaDLL.lua_pushboolean(L, o);
+				return 1;
+			}
+			else if (count == 8)
+			{
+				TimerManager obj = (TimerManager)ToLua.CheckObject<TimerManager>(L, 1);
+				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				long arg1 = LuaDLL.tolua_checkint64(L, 3);
+				long arg2 = LuaDLL.tolua_checkint64(L, 4);
+				int arg3 = (int)LuaDLL.luaL_checknumber(L, 5);
+				System.Action<object,object> arg4 = (System.Action<object,object>)ToLua.CheckDelegate<System.Action<object,object>>(L, 6);
+				object arg5 = ToLua.ToVarObject(L, 7);
+				object arg6 = ToLua.ToVarObject(L, 8);
+				bool o = obj.ModifyTimer(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+				LuaDLL.lua_pushboolean(L, o);
+				return 1;
+			}
+			else
+			{
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: TimerManager.ModifyTimer");
+			}
 		}
 		catch (Exception e)
 		{
@@ -151,6 +281,20 @@ public class TimerManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_s_Instance(IntPtr L)
+	{
+		try
+		{
+			ToLua.Push(L, TimerManager.s_Instance);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_debugTotalTickTimes(IntPtr L)
 	{
 		object o = null;
@@ -166,6 +310,21 @@ public class TimerManagerWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o, "attempt to index debugTotalTickTimes on a nil value");
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_s_Instance(IntPtr L)
+	{
+		try
+		{
+			TimerManager arg0 = (TimerManager)ToLua.CheckObject<TimerManager>(L, 2);
+			TimerManager.s_Instance = arg0;
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
 		}
 	}
 
